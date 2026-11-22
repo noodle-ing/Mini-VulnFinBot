@@ -1,0 +1,10 @@
+rules:
+  - id: python-eval-user-input
+    message: Avoid evaluating user-controlled input; use safe parsing instead.
+    severity: ERROR
+    languages: [python]
+    pattern: eval(...)
+    metadata:
+      category: security
+      cwe: "CWE-95"
+      confidence: HIGH
