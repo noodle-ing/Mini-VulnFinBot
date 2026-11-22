@@ -22,7 +22,7 @@ The CI pipeline runs unit and AI boundary tests, source scanners, dependency sca
 3. The isolated `demo/semgrep-remediation` branch contains `reports/semgrep-before.json` (1 finding) and `reports/semgrep-after.json` (0 findings). Commits `8c014e7` and `cc573ed` show the change.
 4. Local scan date: 2026-11-22. Semgrep 1.186.0 reported 1 finding before and 0 after. Record versions from the final CI run too, since vulnerability databases change.
 
-The [GitHub Actions screenshot](screenshots/actions-success.png) shows a completed workflow and uploaded security artifact. The final run URL is recorded below after completion.
+The [GitHub Actions run](https://github.com/noodle-ing/Mini-VulnFinBot/actions/runs/45055553406) completed successfully with the `vulnfinbot-security-reports` artifact. The [workflow screenshot](screenshots/actions-success.png) shows the result, and the [issues screenshot](screenshots/issues-closed.png) shows all 10 tickets closed.
 
 ## Container remediation evidence
 
