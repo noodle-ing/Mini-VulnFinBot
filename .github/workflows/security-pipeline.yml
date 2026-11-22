@@ -63,7 +63,7 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p reports
-          docker run --rm --network host --user root -v "$PWD/reports:/zap/wrk/:rw" ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://127.0.0.1:8000 -J zap-report.json
+          docker run --rm --network host --user root -v "$PWD/reports:/zap/wrk/:rw" ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://127.0.0.1:8000/health -J zap-report.json
       - name: Stop app container
         if: always()
         run: docker rm -f mini-vulnfinbot || true

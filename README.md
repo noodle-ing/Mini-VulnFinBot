@@ -22,7 +22,7 @@ curl http://127.0.0.1:5000/health
 curl -X POST http://127.0.0.1:5000/api/chat -H 'Content-Type: application/json' -d '{"message":"How can I manage my monthly budget?"}'
 ```
 
-The health response is `{"status":"healthy"}`. The chat response is `{"response":"You can start by tracking your income and expenses."}`. Invalid requests receive JSON errors and appropriate HTTP status codes. Messages are limited to 2,000 characters. User messages are not logged.
+The health response is `{"status":"healthy"}`. The chat response is `{"response":"You can start by tracking your income and expenses."}`. `/` provides a small service status response for monitoring. Invalid requests receive JSON errors and appropriate HTTP status codes. Messages are limited to 2,000 characters. User messages are not logged. Responses include restrictive security headers and disable caching.
 
 ## Tests and scanners
 

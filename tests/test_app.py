@@ -12,6 +12,8 @@ def test_health(client):
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json == {"status": "healthy"}
+    assert response.headers["Cache-Control"] == "no-store"
+    assert response.headers["X-Content-Type-Options"] == "nosniff"
 
 
 def test_chat_returns_mock_budget_tip(client):

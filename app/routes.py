@@ -12,6 +12,10 @@ def generate_response(_message):
 
 
 def register_routes(app):
+    @app.get("/")
+    def index():
+        return jsonify(service="Mini-VulnFinBot", status="healthy")
+
     @app.get("/health")
     def health():
         return jsonify(status="healthy")
