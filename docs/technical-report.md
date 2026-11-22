@@ -8,9 +8,9 @@ The CI pipeline runs unit and AI boundary tests, source scanners, dependency sca
 
 | Security tool | Findings from completed run | Severity | Recommended action |
 | --- | --- | --- | --- |
-| Bandit | Pending CI report | Pending | Review each code finding; replace unsafe APIs |
-| Semgrep | Pending CI report | Pending | Remove any `eval()` usage; see remediation demo |
-| pip-audit | Pending CI report | Pending | Upgrade affected Python packages to patched versions |
+| Bandit | 0 local findings; confirm in CI | None observed | Recheck after code changes |
+| Semgrep | 0 on main; 1 before and 0 after on demo branch | High in demo | Replace `eval()` with safe parsing |
+| pip-audit | 2 advisory entries for pytest 8.4.2 before dependency update; 0 after updating to pytest 9.x | High until fixed | Keep pytest on a patched release |
 | Trivy | Pending CI report | Pending | Update base image and affected OS/Python packages |
 | OWASP ZAP | Pending CI report | Pending | Review headers and information disclosure findings |
 | AI security tests | Mock cases documented in `reports/ai-security-report.md` | Application-level only | Test a controlled real model before claiming prompt-injection resistance |
@@ -19,8 +19,8 @@ The CI pipeline runs unit and AI boundary tests, source scanners, dependency sca
 
 1. Add the Actions run URL and screenshot of completed jobs.
 2. Add screenshots showing the six downloaded report files and representative findings.
-3. Add before/after Semgrep report counts and the remediation diff from the isolated demo branch.
-4. Record the scanner versions and date, since vulnerability databases change.
+3. The isolated `demo/semgrep-remediation` branch contains `reports/semgrep-before.json` (1 finding) and `reports/semgrep-after.json` (0 findings). Commits `8c014e7` and `cc573ed` show the change.
+4. Local scan date: 2026-11-22. Semgrep 1.186.0 reported 1 finding before and 0 after. Record versions from the final CI run too, since vulnerability databases change.
 
 ## Prioritization
 
