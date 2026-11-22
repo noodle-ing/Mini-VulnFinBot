@@ -1,0 +1,69 @@
+name: Security CI Pipeline
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  app-and-scanners:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r requirements.txt bandit semgrep pip-audit
+      - run: pytest -v
+      - name: Create report directory
+        if: always()
+        run: mkdir -p reports
+      - name: Bandit
+        if: always()
+        continue-on-error: true
+        run: bandit -r app -f json -o reports/bandit-report.json
+      - name: Semgrep custom rule
+        if: always()
+        continue-on-error: true
+        run: semgrep scan --config security/semgrep/rules.yml --json --output reports/semgrep-report.json app
+      - name: pip-audit
+        if: always()
+        continue-on-error: true
+        run: pip-audit -r requirements.txt --format=json --output=reports/dependency-report.json
+      - name: Build image
+        if: always()
+        id: image_build
+        run: docker build -t mini-vulnfinbot:${{ github.sha }} .
+      - name: Run container and check health
+        if: ${{ always() && steps.image_build.outcome == 'success' }}
+        id: app_health
+        run: |
+          docker run -d --rm --name mini-vulnfinbot -p 8000:8000 mini-vulnfinbot:${{ github.sha }}
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/health; then exit 0; fi
+            sleep 2
+          done
+          docker logs mini-vulnfinbot
+          exit 1
+      - name: Trivy image scan
+        if: always()
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: mini-vulnfinbot:${{ github.sha }}
+          format: json
+          output: reports/trivy-report.json
+          exit-code: "0"
+      - name: OWASP ZAP baseline scan
+        if: ${{ always() && steps.app_health.outcome == 'success' }}
+        continue-on-error: true
+        run: |
+          mkdir -p reports
+          docker run --rm --network host --user root -v "$PWD/reports:/zap/wrk/:rw" ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://127.0.0.1:8000 -J zap-report.json
+      - name: Stop app container
+        if: always()
+        run: docker rm -f mini-vulnfinbot || true
