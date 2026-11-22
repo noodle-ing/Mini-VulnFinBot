@@ -5,8 +5,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN apt-get update \
     && apt-get upgrade -y --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
-    && python -m pip install --no-cache-dir --upgrade pip \
+    && rm -rf /var/lib/apt/lists/*
+RUN python -m pip install --no-cache-dir --upgrade pip setuptools \
     && pip install --no-cache-dir --no-compile -r requirements.txt \
     && useradd --create-home --uid 10001 appuser
 COPY app ./app
