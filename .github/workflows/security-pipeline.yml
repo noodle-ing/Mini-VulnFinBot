@@ -67,3 +67,11 @@ jobs:
       - name: Stop app container
         if: always()
         run: docker rm -f mini-vulnfinbot || true
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulnfinbot-security-reports
+          path: reports/
+          retention-days: 30
+          if-no-files-found: warn
