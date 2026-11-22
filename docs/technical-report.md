@@ -4,11 +4,11 @@ Repository: https://github.com/noodle-ing/Mini-VulnFinBot
 
 ## Scope and method
 
-The CI pipeline runs unit and AI boundary tests, source scanners, dependency scanning, image scanning, and a ZAP baseline scan against the running container. The assistant uses a deterministic mock. Record the GitHub Actions run URL and actual counts below after the pipeline has completed; scanner findings must not be invented before reports exist.
+The CI pipeline runs unit and AI boundary tests, source scanners, dependency scanning, image scanning, and a ZAP baseline scan against the running container. The assistant uses a deterministic mock. Findings below are from local scans on 2026-11-22; the linked GitHub Actions run contains the corresponding CI artifacts.
 
 | Security tool | Findings from completed run | Severity | Recommended action |
 | --- | --- | --- | --- |
-| Bandit | 0 local findings; confirm in CI | None observed | Recheck after code changes |
+| Bandit | 0 local findings | None observed | Recheck after code changes |
 | Semgrep | 0 on main; 1 before and 0 after on demo branch | High in demo | Replace `eval()` with safe parsing |
 | pip-audit | 2 advisory entries for pytest 8.4.2 before dependency update; 0 after updating to pytest 9.x | High until fixed | Keep pytest on a patched release |
 | Trivy | Local image: 210 OS findings (50 high, 74 medium, 79 low, 7 unknown), 0 critical; 3 reported Python findings from inherited setuptools 70.3.0 SBOM | High findings remain | Review reachable packages and patched base images; validate SBOM against runtime |
@@ -17,12 +17,11 @@ The CI pipeline runs unit and AI boundary tests, source scanners, dependency sca
 
 ## Demonstration evidence
 
-1. Add the Actions run URL and screenshot of completed jobs.
-2. Add screenshots showing the six downloaded report files and representative findings.
-3. The isolated `demo/semgrep-remediation` branch contains `reports/semgrep-before.json` (1 finding) and `reports/semgrep-after.json` (0 findings). Commits `8c014e7` and `cc573ed` show the change.
-4. Local scan date: 2026-11-22. Semgrep 1.186.0 reported 1 finding before and 0 after. Record versions from the final CI run too, since vulnerability databases change.
+1. The [final GitHub Actions run](https://github.com/noodle-ing/Mini-VulnFinBot/actions/runs/45055842741) completed successfully and uploaded `vulnfinbot-security-reports`.
+2. The [workflow screenshot](screenshots/actions-success.png) shows a successful run and report artifact; the [issues screenshot](screenshots/issues-closed.png) shows all 10 tickets closed.
+3. The isolated `demo/semgrep-remediation` branch contains `reports/semgrep-before.json` (1 finding) and `reports/semgrep-after.json` (0 findings). Commits `8c014e7` and `cc573ed` show the change. Semgrep 1.186.0 was used for the local comparison.
 
-The [GitHub Actions run](https://github.com/noodle-ing/Mini-VulnFinBot/actions/runs/45055553406) completed successfully with the `vulnfinbot-security-reports` artifact. The [workflow screenshot](screenshots/actions-success.png) shows the result, and the [issues screenshot](screenshots/issues-closed.png) shows all 10 tickets closed.
+The repository URL is https://github.com/noodle-ing/Mini-VulnFinBot. Its existing name differs from the suggested `vulnfinbot-secure-pipeline` name in the lab handout. The first commit contained a README, so the historic empty-repository step cannot be demonstrated from this repository history.
 
 ## Container remediation evidence
 
